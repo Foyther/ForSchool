@@ -12,6 +12,11 @@ import java.io.Serializable;
 @Entity
 @Table(name = "users")
 public class User implements Serializable{
+
+    public static final String ADMIN_ROLE = "ADMIN";
+    public static final String STUDENT_ROLE = "STUDENT";
+    public static final String TEACHER_ROLE = "TEACHER";
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

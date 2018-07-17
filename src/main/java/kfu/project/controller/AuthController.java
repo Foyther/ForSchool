@@ -1,0 +1,80 @@
+package kfu.project.controller;
+
+import kfu.project.entity.User;
+import kfu.project.entity.UserToken;
+import kfu.project.service.auth.AuthService;
+import kfu.project.service.exception.DeadAccessTokenException;
+import kfu.project.service.exception.IncorrectLoginDataException;
+import kfu.project.service.exception.IncorrectRegistrationFormException;
+import kfu.project.service.exception.NotFound.UserNotFoundException;
+import kfu.project.service.exception.UserWithSameEmailAlreadyExistsException;
+import kfu.project.service.form.LoginForm;
+import kfu.project.service.form.RegistrationForm;
+import kfu.project.service.intrface.UserService;
+import kfu.project.service.response.ApiResult;
+import kfu.project.service.response.ErrorCodes;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * Created by Nurislam on 17.07.2018.
+ */
+@RestController
+@RequestMapping(path = "api/")
+public class AuthController {
+
+    @Autowired
+    private AuthService authService;
+
+    @Autowired
+    private ErrorCodes errorCodes;
+
+    @Autowired
+    private UserService userService;
+
+    @RequestMapping(value = "/sign_in", method = RequestMethod.POST)
+    public ApiResult login(LoginForm loginForm) {
+        ApiResult result = new ApiResult(errorCodes.getSuccess());
+        try {
+            UserToken userToken = authService.getToken(loginForm);
+            User user = userService.getByAccessToken(userToken.getAccessToken());
+            if (userToken != null && user != null) {
+//                result.setBody(user);
+                result.setBody(userToken);
+            } else {
+                result.setCode(errorCodes.getNotFound());
+            }
+        } catch (IncorrectLoginDataException ex) {
+            result.setCode(errorCodes.getInvalidLoginOrPassword());
+        } catch (UserNotFoundException e) {
+            result.setCode(errorCodes.getNotFound());
+        } catch (DeadAccessTokenException e) {
+            result.setCode(errorCodes.getInvalidOrOldAccessToken());
+        }
+
+        return result;
+    }
+
+    @RequestMapping(value = "/sign_up", method = RequestMethod.GET)
+    public ApiResult registration() {
+        ApiResult result = new ApiResult(errorCodes.getSuccess());
+        RegistrationForm form = new RegistrationForm("admin@mail.ru", "12345678" ,"Admin ist me", User.ADMIN_ROLE );
+        try {
+            UserToken token = authService.registration(form);
+            if (token != null) {
+                result.setBody(token);
+            } else {
+                result.setCode(errorCodes.getNotFound());
+            }
+        } catch (UserWithSameEmailAlreadyExistsException ex) {
+            result.setCode(errorCodes.getUserWithSameLoginAlreadyExists());
+            Logger.getLogger(AuthController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
+}
