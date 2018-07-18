@@ -14,10 +14,9 @@ import kfu.project.service.response.ApiResult;
 import kfu.project.service.response.AuthResult;
 import kfu.project.service.response.ErrorCodes;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Set;
 
 /**
  * Created by Nurislam on 18.07.2018.
@@ -33,7 +32,7 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
-    @RequestMapping(value = "", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.POST)
     public ApiResult getTasks(@RequestBody TaskForm taskForm) {
         ApiResult result = new ApiResult(errorCodes.getSuccess());
         try {
@@ -48,16 +47,13 @@ public class TaskController {
         return result;
     }
 
-    @RequestMapping(value = "", method = RequestMethod.POST)
-    public ApiResult add(@RequestBody TaskForm taskForm) {
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public ApiResult add(@RequestHeader(name = "teacher_token", required = true) String token) {
         ApiResult result = new ApiResult(errorCodes.getSuccess());
-        try {
-            if (taskForm != null) {
-                taskService.save(taskForm);
-            } else {
-                result.setCode(errorCodes.getNotFound());
-            }
-        } catch (UserNotFoundException e) {
+        if (token != null) {
+            Set<Task> tasks= taskService.getAllByTeacher(token);
+            result.setBody(tasks);
+        } else {
             result.setCode(errorCodes.getNotFound());
         }
         return result;

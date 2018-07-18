@@ -36,6 +36,9 @@ public class TaskServiceImpl implements TaskService {
     @Autowired
     private TeacherRepository teacherRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     public Task save(TaskForm taskForm) throws UserNotFoundException {
         if(taskForm == null){
@@ -53,9 +56,8 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Set<Task> getAllByTeacher(String token) {
-        User user = new User();
+        User user = userRepository.findOneByToken(token);
         Teacher teacher = teacherRepository.getByUser(user);
-        taskRepository.getAllByTeacher(teacher);
-        return null;
+        return taskRepository.getAllByTeacher(teacher);
     }
 }
