@@ -19,4 +19,28 @@ public class Test extends BogoClass {
 
     @OneToMany(mappedBy = "test", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<TestAnswer> answers;
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public Task getTask() {
+        return task;
+    }
+
+    public void setTask(Task task) {
+        this.task = task;
+    }
+
+    public Set<TestAnswer> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(Set<TestAnswer> answers) {
+        this.answers = answers;
+    }
 }

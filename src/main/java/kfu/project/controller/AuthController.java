@@ -69,7 +69,7 @@ public class AuthController {
     @RequestMapping(value = "/sign_up", method = RequestMethod.GET)
     public ApiResult registration() {
         ApiResult result = new ApiResult(errorCodes.getSuccess());
-        RegistrationForm form = new RegistrationForm(" teacherCool@google.com", "12345678" ,"Admin ist me", User.ADMIN_ROLE );
+        RegistrationForm form = new RegistrationForm(" teacherCool@google.com", "12345678" ,"Teacher", User.TEACHER_ROLE );
         try {
             UserToken token = authService.registration(form);
             if (token != null) {

@@ -10,8 +10,8 @@ public class AuthResult {
     @JsonProperty(value = "user_id")
     private Long id;
     private String role;
-    private String name;
     private String token;
+    private String name;
 
     public AuthResult() {
     }

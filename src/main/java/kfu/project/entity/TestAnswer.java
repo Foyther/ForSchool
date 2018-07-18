@@ -21,4 +21,31 @@ public class TestAnswer extends BogoClass {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     private Test test;
+
+    public TestAnswer() {
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public boolean isCorrect() {
+        return correct;
+    }
+
+    public void setCorrect(boolean correct) {
+        this.correct = correct;
+    }
+
+    public Test getTest() {
+        return test;
+    }
+
+    public void setTest(Test test) {
+        this.test = test;
+    }
 }
