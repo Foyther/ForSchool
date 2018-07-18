@@ -5,15 +5,16 @@ import kfu.project.entity.UserToken;
 import kfu.project.service.auth.AuthService;
 import kfu.project.service.exception.DeadAccessTokenException;
 import kfu.project.service.exception.IncorrectLoginDataException;
-import kfu.project.service.exception.IncorrectRegistrationFormException;
 import kfu.project.service.exception.NotFound.UserNotFoundException;
 import kfu.project.service.exception.UserWithSameEmailAlreadyExistsException;
 import kfu.project.service.form.LoginForm;
 import kfu.project.service.form.RegistrationForm;
 import kfu.project.service.intrface.UserService;
 import kfu.project.service.response.ApiResult;
+import kfu.project.service.response.AuthResult;
 import kfu.project.service.response.ErrorCodes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,14 +39,19 @@ public class AuthController {
     private UserService userService;
 
     @RequestMapping(value = "/sign_in", method = RequestMethod.POST)
-    public ApiResult login(LoginForm loginForm) {
+    public ApiResult login(@RequestBody LoginForm loginForm) {
         ApiResult result = new ApiResult(errorCodes.getSuccess());
         try {
             UserToken userToken = authService.getToken(loginForm);
             User user = userService.getByAccessToken(userToken.getAccessToken());
             if (userToken != null && user != null) {
 //                result.setBody(user);
-                result.setBody(userToken);
+                AuthResult authResult = new AuthResult();
+                authResult.setId(user.getId());
+                authResult.setName(user.getName());
+                authResult.setRole(user.getRole());
+                authResult.setToken(userToken.getAccessToken());
+                result.setBody(authResult);
             } else {
                 result.setCode(errorCodes.getNotFound());
             }
@@ -63,7 +69,7 @@ public class AuthController {
     @RequestMapping(value = "/sign_up", method = RequestMethod.GET)
     public ApiResult registration() {
         ApiResult result = new ApiResult(errorCodes.getSuccess());
-        RegistrationForm form = new RegistrationForm("admin@mail.ru", "12345678" ,"Admin ist me", User.ADMIN_ROLE );
+        RegistrationForm form = new RegistrationForm(" teacherCool@google.com", "12345678" ,"Admin ist me", User.ADMIN_ROLE );
         try {
             UserToken token = authService.registration(form);
             if (token != null) {
