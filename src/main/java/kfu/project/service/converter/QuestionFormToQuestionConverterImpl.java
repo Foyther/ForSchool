@@ -12,12 +12,13 @@ public class QuestionFormToQuestionConverterImpl implements QuestionFormToQuesti
     @Override
     public Question convert(QuestionForm source) {
         if(source == null){
-
             return null;
         }
         Question question = new Question();
         question.setAnswer(source.getAnswer());
         question.setText(source.getText());
+        question.setMark(source.getMark());
+        question.setRecommendation(source.getRecommendation());
         return question;
     }
 }

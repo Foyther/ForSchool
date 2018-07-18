@@ -17,6 +17,8 @@ public class TestForm {
     private Set<TestAnswerForm> answers;
 
     private String text;
+    private String recommendation;
+    private Integer mark;
 
     public Set<TestAnswerForm> getAnswers() {
         return answers;
@@ -32,5 +34,21 @@ public class TestForm {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String getRecommendation() {
+        return recommendation;
+    }
+
+    public void setRecommendation(String recommendation) {
+        this.recommendation = recommendation;
+    }
+
+    public Integer getMark() {
+        return mark;
+    }
+
+    public void setMark(Integer mark) {
+        this.mark = mark;
     }
 }

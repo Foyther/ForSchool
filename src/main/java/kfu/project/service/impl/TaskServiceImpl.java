@@ -1,11 +1,10 @@
 package kfu.project.service.impl;
 
 import kfu.project.entity.Task;
+import kfu.project.entity.Teacher;
 import kfu.project.entity.Test;
-import kfu.project.repository.QuestionRepository;
-import kfu.project.repository.TaskRepository;
-import kfu.project.repository.TestAnswerRepository;
-import kfu.project.repository.TestRepository;
+import kfu.project.entity.User;
+import kfu.project.repository.*;
 import kfu.project.service.converter.TaskFormToTaskConverter;
 import kfu.project.service.exception.NotFound.UserNotFoundException;
 import kfu.project.service.form.QuestionForm;
@@ -13,6 +12,8 @@ import kfu.project.service.form.TaskForm;
 import kfu.project.service.intrface.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Set;
 
 /**
  * Created by Nurislam on 18.07.2018.
@@ -33,7 +34,7 @@ public class TaskServiceImpl implements TaskService {
     private QuestionRepository questionRepository;
 
     @Autowired
-    private TestAnswerRepository testAnswerRepository;
+    private TeacherRepository teacherRepository;
 
     @Override
     public Task save(TaskForm taskForm) throws UserNotFoundException {
@@ -48,5 +49,13 @@ public class TaskServiceImpl implements TaskService {
 //
 //        }
         return task;
+    }
+
+    @Override
+    public Set<Task> getAllByTeacher(String token) {
+        User user = new User();
+        Teacher teacher = teacherRepository.getByUser(user);
+        taskRepository.getAllByTeacher(teacher);
+        return null;
     }
 }

@@ -33,6 +33,20 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public ApiResult getTasks(@RequestBody TaskForm taskForm) {
+        ApiResult result = new ApiResult(errorCodes.getSuccess());
+        try {
+            if (taskForm != null) {
+                taskService.save(taskForm);
+            } else {
+                result.setCode(errorCodes.getNotFound());
+            }
+        } catch (UserNotFoundException e) {
+            result.setCode(errorCodes.getNotFound());
+        }
+        return result;
+    }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ApiResult add(@RequestBody TaskForm taskForm) {

@@ -27,9 +27,14 @@ public class TestFormToTestConverterImpl implements TestFormToTestConverter {
         Test test = new Test();
         Set<TestAnswer> answers = new HashSet<>();
         for(TestAnswerForm form: source.getAnswers()){
-            answers.add(testAnswerFormToTestAnswerConverter.convert(form));
+            TestAnswer temp = testAnswerFormToTestAnswerConverter.convert(form);
+            temp.setTest(test);
+            answers.add(temp);
         }
+        test.setAnswers(answers);
         test.setText(source.getText());
+        test.setMark(source.getMark());
+        test.setRecommendation(source.getRecommendation());
         return test;
     }
 }

@@ -14,6 +14,10 @@ public class Test extends BogoClass {
     @NotNull
     private String text;
 
+    private String recommendation;
+
+    private Integer mark;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Task task;
 
@@ -42,5 +46,21 @@ public class Test extends BogoClass {
 
     public void setAnswers(Set<TestAnswer> answers) {
         this.answers = answers;
+    }
+
+    public String getRecommendation() {
+        return recommendation;
+    }
+
+    public void setRecommendation(String recommendation) {
+        this.recommendation = recommendation;
+    }
+
+    public Integer getMark() {
+        return mark;
+    }
+
+    public void setMark(Integer mark) {
+        this.mark = mark;
     }
 }

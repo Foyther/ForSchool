@@ -3,6 +3,7 @@ package kfu.project.service.converter;
 import kfu.project.entity.Question;
 import kfu.project.entity.Task;
 import kfu.project.entity.Test;
+import kfu.project.entity.TestAnswer;
 import kfu.project.service.form.QuestionForm;
 import kfu.project.service.form.TaskForm;
 import kfu.project.service.form.TestForm;
@@ -38,14 +39,19 @@ public class TaskFormToTaskConverterImpl implements TaskFormToTaskConverter{
         task.setTeacher(teacherService.getByToken(source.getTeacher()));
         Set<Question> questions = new HashSet<>();
         for(QuestionForm form: source.getQuestions()){
-            questions.add(converter.convert(form));
+            Question temp = converter.convert(form);
+            temp.setTask(task);
+            questions.add(temp);
         }
         task.setQuestions(questions);
 
         Set<Test> tests = new HashSet<>();
         for(TestForm form: source.getTests()){
-            tests.add(testFormToTestConverter.convert(form));
+            Test temp = testFormToTestConverter.convert(form);
+            temp.setTask(task);
+            tests.add(temp);
         }
+        task.setTests(tests);
         return task;
     }
 }
