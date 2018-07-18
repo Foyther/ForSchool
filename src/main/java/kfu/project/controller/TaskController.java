@@ -4,11 +4,13 @@ import kfu.project.entity.Task;
 import kfu.project.entity.User;
 import kfu.project.entity.UserToken;
 import kfu.project.service.converter.TaskFormToTaskConverter;
+import kfu.project.service.exception.AccessDeniedException;
 import kfu.project.service.exception.DeadAccessTokenException;
 import kfu.project.service.exception.IncorrectLoginDataException;
 import kfu.project.service.exception.NotFound.UserNotFoundException;
 import kfu.project.service.form.LoginForm;
 import kfu.project.service.form.TaskForm;
+import kfu.project.service.form.TaskShortForm;
 import kfu.project.service.intrface.TaskService;
 import kfu.project.service.response.ApiResult;
 import kfu.project.service.response.AuthResult;
@@ -48,11 +50,23 @@ public class TaskController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ApiResult add(@RequestHeader(name = "teacher_token", required = true) String token) {
+    public ApiResult add(@RequestHeader(name = "teacher_token") String token) {
         ApiResult result = new ApiResult(errorCodes.getSuccess());
         if (token != null) {
             Set<Task> tasks= taskService.getAllByTeacher(token);
             result.setBody(tasks);
+        } else {
+            result.setCode(errorCodes.getNotFound());
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.DELETE)
+    public ApiResult delete(@RequestHeader(name = "teacher_token") String token,
+                            @RequestBody TaskShortForm form) throws AccessDeniedException {
+        ApiResult result = new ApiResult(errorCodes.getSuccess());
+        if (token != null && form != null) {
+            taskService.deleteByIdAndToken(form.getId(), token);
         } else {
             result.setCode(errorCodes.getNotFound());
         }

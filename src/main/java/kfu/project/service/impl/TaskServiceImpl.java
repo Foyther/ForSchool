@@ -6,11 +6,13 @@ import kfu.project.entity.Test;
 import kfu.project.entity.User;
 import kfu.project.repository.*;
 import kfu.project.service.converter.TaskFormToTaskConverter;
+import kfu.project.service.exception.AccessDeniedException;
 import kfu.project.service.exception.NotFound.UserNotFoundException;
 import kfu.project.service.form.QuestionForm;
 import kfu.project.service.form.TaskForm;
 import kfu.project.service.intrface.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -60,4 +62,13 @@ public class TaskServiceImpl implements TaskService {
         Teacher teacher = teacherRepository.getByUser(user);
         return taskRepository.getAllByTeacher(teacher);
     }
+
+    @Override
+    public void deleteByIdAndToken(Long id, String token) throws AccessDeniedException {
+        Teacher teacher = teacherRepository.getByUser(userRepository.findOneByToken(token));
+        if(teacher != null){
+            taskRepository.delete(id);
+        } else throw new AccessDeniedException();
+    }
+
 }
