@@ -31,4 +31,12 @@ public class Teacher extends BogoClass {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public Set<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(Set<Group> groups) {
+        this.groups = groups;
+    }
 }

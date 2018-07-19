@@ -7,6 +7,7 @@ import kfu.project.service.form.GroupShortForm;
 import kfu.project.service.form.StudentsForTaskFrom;
 import kfu.project.service.intrface.StudentService;
 import kfu.project.service.intrface.TaskService;
+import kfu.project.service.intrface.TeacherService;
 import kfu.project.service.response.ApiResult;
 import kfu.project.service.response.ErrorCodes;
 import kfu.project.service.response.StudentShortResult;
@@ -29,6 +30,9 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
+    @Autowired
+    private TeacherService teacherService;
+
     @RequestMapping(value = "/students", method = RequestMethod.POST)
     public ApiResult group(@RequestHeader(name = "teacher_token") String token,
                                  @RequestBody GroupShortForm form)  {
@@ -48,10 +52,27 @@ public class StudentController {
         return result;
     }
 
+    @RequestMapping(value = "/my_groups", method = RequestMethod.GET)
+    public ApiResult myGroups(@RequestHeader(name = "teacher_token") String token)  {
+        ApiResult result = new ApiResult(errorCodes.getSuccess());
+        try {
+            if (token != null) {
+                result.setBody(teacherService.getAllGroupsByToken(token));
+            } else {
+                result.setCode(errorCodes.getNotFound());
+            }
+        } catch (UserNotFoundException e) {
+            e.printStackTrace();
+            result.setCode(errorCodes.getNotFound());
+        }
+        return result;
+    }
+
     public Set<StudentShortResult> getStudents(Set<Student> students){
         Set<StudentShortResult> results = new HashSet<>();
         for(Student student: students){
             StudentShortResult temp = new StudentShortResult(student.getId());
+            temp.setName(student.getUser().getName());
             results.add(temp);
         }
         return results;

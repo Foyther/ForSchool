@@ -1,19 +1,14 @@
 package kfu.project.service.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Set;
 
 /**
  * Created by Nurislam on 19.07.2018.
  */
-public class StudentShortResult {
-
-    @JsonProperty(value = "student_id")
+public class MyGroupResult {
     private Long id;
     private String name;
-
-    public StudentShortResult(Long id) {
-        this.id = id;
-    }
+    private Set<StudentShortResult> results;
 
     public Long getId() {
         return id;
@@ -29,5 +24,13 @@ public class StudentShortResult {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Set<StudentShortResult> getResults() {
+        return results;
+    }
+
+    public void setResults(Set<StudentShortResult> results) {
+        this.results = results;
     }
 }

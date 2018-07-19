@@ -1,5 +1,6 @@
 package kfu.project.repository;
 
+import kfu.project.entity.Group;
 import kfu.project.entity.Teacher;
 import kfu.project.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
