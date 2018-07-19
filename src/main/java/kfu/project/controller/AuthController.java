@@ -69,7 +69,19 @@ public class AuthController {
     @RequestMapping(value = "/sign_up", method = RequestMethod.GET)
     public ApiResult registration() {
         ApiResult result = new ApiResult(errorCodes.getSuccess());
-        RegistrationForm form = new RegistrationForm("teacherCool@google.com", "12345678" ,"Teacher", User.TEACHER_ROLE );
+        RegistrationForm teacher = new RegistrationForm("teacherCool@google.com", "12345678" ,"Teacher", User.TEACHER_ROLE );
+        RegistrationForm student1 = new RegistrationForm("Vasya@google.com", "12345678" ,"Vasya", User.STUDENT_ROLE );
+        RegistrationForm student2 = new RegistrationForm("Artem@google.com", "12345678" ,"Artem", User.STUDENT_ROLE);
+        RegistrationForm admin = new RegistrationForm("admin@mail.ru", "12345678" ,"ADMEN", User.ADMIN_ROLE );
+        result = save(teacher);
+        result = save(student1);
+        result = save(student2);
+        result = save(admin);
+        return result;
+    }
+
+    public ApiResult save(RegistrationForm form){
+        ApiResult result = new ApiResult(errorCodes.getSuccess());
         try {
             UserToken token = authService.registration(form);
             if (token != null) {

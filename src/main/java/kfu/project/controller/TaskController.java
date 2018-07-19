@@ -9,6 +9,7 @@ import kfu.project.service.exception.DeadAccessTokenException;
 import kfu.project.service.exception.IncorrectLoginDataException;
 import kfu.project.service.exception.NotFound.UserNotFoundException;
 import kfu.project.service.form.LoginForm;
+import kfu.project.service.form.StudentsForTaskFrom;
 import kfu.project.service.form.TaskForm;
 import kfu.project.service.form.TaskShortForm;
 import kfu.project.service.intrface.TaskService;
@@ -53,7 +54,7 @@ public class TaskController {
     public ApiResult add(@RequestHeader(name = "teacher_token") String token) {
         ApiResult result = new ApiResult(errorCodes.getSuccess());
         if (token != null) {
-            Set<Task> tasks= taskService.getAllByTeacher(token);
+            Set<Task> tasks = taskService.getAllByTeacher(token);
             result.setBody(tasks);
         } else {
             result.setCode(errorCodes.getNotFound());
@@ -68,6 +69,25 @@ public class TaskController {
         if (token != null && form != null) {
             taskService.deleteByIdAndToken(form.getId(), token);
         } else {
+            result.setCode(errorCodes.getNotFound());
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "/students", method = RequestMethod.POST)
+    public ApiResult addStudents(@RequestHeader(name = "teacher_token") String token,
+                                 @RequestBody StudentsForTaskFrom form) throws AccessDeniedException {
+        ApiResult result = new ApiResult(errorCodes.getSuccess());
+        try {
+            if (token != null && form != null) {
+
+                taskService.addStudent(form);
+
+            } else {
+                result.setCode(errorCodes.getNotFound());
+            }
+        } catch (UserNotFoundException e) {
+            e.printStackTrace();
             result.setCode(errorCodes.getNotFound());
         }
         return result;

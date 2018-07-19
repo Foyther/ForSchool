@@ -6,12 +6,8 @@
 package kfu.project.service.auth;
 
 
-import kfu.project.entity.Teacher;
-import kfu.project.entity.User;
-import kfu.project.entity.UserToken;
-import kfu.project.repository.TeacherRepository;
-import kfu.project.repository.UserRepository;
-import kfu.project.repository.UserTokenRepository;
+import kfu.project.entity.*;
+import kfu.project.repository.*;
 import kfu.project.service.Crypter;
 import kfu.project.service.TokenGenerator;
 import kfu.project.service.exception.DeadAccessTokenException;
@@ -38,6 +34,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private TeacherRepository teacherRepository;
+
+    @Autowired
+    private StudentRepository studentRepository;
+
+    @Autowired
+    private AdminRepository adminRepository;
 
 
     private long accessTokenLifeTime;
@@ -104,8 +106,14 @@ public class AuthServiceImpl implements AuthService {
                         teacherRepository.save(teacher);
                         break;
                     case User.STUDENT_ROLE:
+                        Student student = new Student();
+                        student.setUser(user);
+                        studentRepository.save(student);
                         break;
                     case User.ADMIN_ROLE:
+                        Admin admin = new Admin();
+                        admin.setUser(user);
+                        adminRepository.save(admin);
                         break;
 
                 }

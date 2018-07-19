@@ -1,20 +1,20 @@
 package kfu.project.service.impl;
 
-import kfu.project.entity.Task;
-import kfu.project.entity.Teacher;
-import kfu.project.entity.Test;
-import kfu.project.entity.User;
+import kfu.project.entity.*;
 import kfu.project.repository.*;
 import kfu.project.service.converter.TaskFormToTaskConverter;
 import kfu.project.service.exception.AccessDeniedException;
 import kfu.project.service.exception.NotFound.UserNotFoundException;
 import kfu.project.service.form.QuestionForm;
+import kfu.project.service.form.StudentForm;
+import kfu.project.service.form.StudentsForTaskFrom;
 import kfu.project.service.form.TaskForm;
 import kfu.project.service.intrface.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -40,6 +40,9 @@ public class TaskServiceImpl implements TaskService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private StudentRepository studentRepository;
 
     @Override
     public Task save(TaskForm taskForm) throws UserNotFoundException {
@@ -69,6 +72,23 @@ public class TaskServiceImpl implements TaskService {
         if(teacher != null){
             taskRepository.delete(id);
         } else throw new AccessDeniedException();
+    }
+
+    @Override
+    public void addStudent(StudentsForTaskFrom taskFrom) throws AccessDeniedException, UserNotFoundException {
+        Task task = taskRepository.findById(taskFrom.getId());
+        if(task == null){
+            throw new UserNotFoundException();
+        }
+        Set<Student> students = task.getStudents();
+        if(students == null){
+            students = new HashSet<>();
+        }
+        for(StudentForm form: taskFrom.getStudentForms()){
+            students.add(studentRepository.findOne(form.getId()));
+        }
+        task.setStudents(students);
+        taskRepository.save(task);
     }
 
 }

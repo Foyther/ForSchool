@@ -12,4 +12,6 @@ import java.util.Set;
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
     Set<Task> getAllByTeacher(Teacher teacher);
+
+    Task findById(Long id);
 }

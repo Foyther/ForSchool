@@ -3,6 +3,8 @@ package kfu.project.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.Set;
+
 /**
  * Created by Nurislam on 13.07.2018.
  */
@@ -14,6 +16,10 @@ public class Teacher extends BogoClass {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Group> groups;
 
     public Teacher() {
     }

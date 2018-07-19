@@ -5,6 +5,8 @@ import kfu.project.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Set;
+
 /**
  * Created by Nurislam on 18.07.2018.
  */

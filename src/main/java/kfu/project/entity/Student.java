@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 /**
  * Created by Nurislam on 13.07.2018.
@@ -12,9 +13,9 @@ import javax.validation.constraints.NotNull;
 @Table(name = "students")
 public class Student extends BogoClass {
 
-    @NotNull
-    @Column(name = "class")
-    private int classNumber;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "groups")
+    private Group group;
 
     @NotNull
     @JsonIgnore
@@ -22,15 +23,23 @@ public class Student extends BogoClass {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Set<Task> tasks;
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Set<Task> passedTasks;
+
     public Student() {
     }
 
-    public int getClassNumber() {
-        return classNumber;
+    public Group getGroup() {
+        return group;
     }
 
-    public void setClassNumber(int classNumber) {
-        this.classNumber = classNumber;
+    public void setGroup(Group group) {
+        this.group = group;
     }
 
     public User getUser() {
@@ -39,5 +48,21 @@ public class Student extends BogoClass {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Set<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(Set<Task> tasks) {
+        this.tasks = tasks;
+    }
+
+    public Set<Task> getPassedTasks() {
+        return passedTasks;
+    }
+
+    public void setPassedTasks(Set<Task> passedTasks) {
+        this.passedTasks = passedTasks;
     }
 }

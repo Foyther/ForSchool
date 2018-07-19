@@ -4,6 +4,7 @@ import kfu.project.entity.Task;
 import kfu.project.entity.Teacher;
 import kfu.project.service.exception.AccessDeniedException;
 import kfu.project.service.exception.NotFound.UserNotFoundException;
+import kfu.project.service.form.StudentsForTaskFrom;
 import kfu.project.service.form.TaskForm;
 
 import java.util.Set;
@@ -18,4 +19,6 @@ public interface TaskService {
     public Set<Task> getAllByTeacher(String token);
 
     void deleteByIdAndToken(Long id, String token) throws AccessDeniedException;
+
+    void addStudent(StudentsForTaskFrom taskFrom) throws AccessDeniedException, UserNotFoundException;
 }

@@ -29,6 +29,14 @@ public class Task extends BogoClass {
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Question> questions;
 
+    @JsonIgnore
+    @ManyToMany(mappedBy = "tasks", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Student> students;
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "tasks", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Student> pastedStudents;
+
     public Task() {
     }
 
@@ -62,5 +70,22 @@ public class Task extends BogoClass {
 
     public void setQuestions(Set<Question> questions) {
         this.questions = questions;
+    }
+
+
+    public Set<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(Set<Student> students) {
+        this.students = students;
+    }
+
+    public Set<Student> getPastedStudents() {
+        return pastedStudents;
+    }
+
+    public void setPastedStudents(Set<Student> pastedStudents) {
+        this.pastedStudents = pastedStudents;
     }
 }
